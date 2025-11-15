@@ -17,7 +17,18 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
 *   **Toimenpiteet:**
     *   Luotiin `README.md`-tiedosto, joka sisältää projektin kuvauksen ja turvallisuusohjeistuksen.
     *   Varmistettiin, että `.gitignore` estää arkaluontoisten tiedostojen versionhallinnan.
-*   **Seuraavat vaiheet:** Viedään kaikki projektin tiedostot (`main.py`, `requirements.txt`, `README.md`, `.gitignore`, `projektiloki.md`) GitHub-arkistoon.
+    *   Kaikki tiedostot (paitsi `firebase-credentials.json`) on lisätty, committoitu ja pushattu GitHub-arkistoon.
+*   **Status:** **Valmis.**
 
-*   **Seuraava tehtävä:** Datan haku ulkoisesta API-rajapinnasta.
-*   **Status:** Odotetaan tietoja kohde-API:sta käyttäjältä.
+*   **Tehtävä:** Datan haku ulkoisesta API-rajapinnasta (StatFin) ja tallennus Firestoreen.
+*   **Toimenpiteet:**
+    *   Päivitettiin `main.py`-tiedosto sisältämään funktiot kuukausikoodien generointiin (tammikuusta 2008 nykyiseen kuukauteen), StatFin API -kyselyn rakentamiseen, API-pyynnön tekemiseen ja JSON-vastauksen jäsentämiseen.
+    *   Korjattiin JSON-vastauksen jäsentämislogiikkaa (`data['dataset']['dimension']` -> `data['dimension']`).
+    *   Implementoitiin sivutusstrategia, jossa data haetaan vuosittain erillisillä API-kutsuilla, jotta vältetään API:n pyyntökoon rajoitukset.
+    *   Lisättiin robusti virheenkäsittely `400 Client Error` -virheelle nykyisen vuoden datan haussa. Skripti haki onnistuneesti datan vuoteen 2024 asti ja vuoden 2025 osalta syyskuuhun (2025M09) asti.
+    *   Lisättiin logiikka datan tallentamiseksi Firestoren `unemployment_data`-kokoelmaan.
+    *   Poistettiin virheenkorjaustulosteet.
+*   **Status:** **Valmis.** Kaikki saatavilla oleva historiallinen data on haettu ja tallennettu Firestoreen.
+
+*   **Seuraava tehtävä:** Automatisoidun kuukausittaisen päivityksen suunnittelu ja toteutus.
+*   **Status:** Odottaa käyttäjän vahvistusta.
