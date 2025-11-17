@@ -28,59 +28,32 @@ const dataTypes = {
 const dataContainer = document.getElementById('data-container');
 
 async function fetchData() {
-    const latestData = {};
+    try {
+        const query = db.collection('unemployment_general_summary').orderBy('year_month', 'desc').limit(1);
+        const snapshot = await query.get();
 
-    for (const region of regions) {
-        latestData[region] = {};
-        for (const dataType in dataTypes) {
-            const query = db.collection('unemployment_data')
-                .where('region_name', '==', region)
-                .where('data_type_code', '==', dataType)
-                .orderBy('year_month', 'desc')
-                .limit(13); // Fetch last 13 months to get previous year and month
-
-            const snapshot = await query.get();
-            const docs = snapshot.docs.map(doc => doc.data());
-
-            if (docs.length > 0) {
-                const currentMonthData = docs[0];
-                const prevMonthData = docs[1];
-                const prevYearData = docs[12];
-
-                let monthTrend = 'neutral';
-                if (prevMonthData) {
-                    if (currentMonthData.value > prevMonthData.value) {
-                        monthTrend = 'down';
-                    } else if (currentMonthData.value < prevMonthData.value) {
-                        monthTrend = 'up';
-                    }
-                }
-
-                let yearTrend = 'neutral';
-                if (prevYearData) {
-                    if (currentMonthData.value > prevYearData.value) {
-                        yearTrend = 'down';
-                    } else if (currentMonthData.value < prevYearData.value) {
-                        yearTrend = 'up';
-                    }
-                }
-
-                latestData[region][dataType] = {
-                    value: currentMonthData.value,
-                    monthTrend: monthTrend,
-                    yearTrend: yearTrend
-                };
-            }
+        if (snapshot.empty) {
+            dataContainer.innerHTML = '<p>Dataa ei löytynyt.</p>';
+            return;
         }
-    }
 
-    renderData(latestData);
+        const latestData = snapshot.docs[0].data();
+        renderData(latestData);
+    } catch (e) {
+        console.error("Error fetching data:", e);
+        dataContainer.innerHTML = '<p>Datan lataus epäonnistui.</p>';
+    }
 }
 
 function renderData(data) {
     dataContainer.innerHTML = '';
 
+    const regionsData = data.regions;
+
     for (const region of regions) {
+        const regionData = regionsData[region];
+        if (!regionData) continue;
+
         const regionCard = document.createElement('div');
         regionCard.className = 'col-md-6 col-lg-3 mb-4';
 
@@ -90,14 +63,10 @@ function renderData(data) {
                             </div>
                             <ul class="list-group list-group-flush">`;
 
-        for (const dataType in data[region]) {
-            const item = data[region][dataType];
+        for (const dataType in regionData) {
+            const value = regionData[dataType];
             cardHtml += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                            ${dataTypes[dataType]}: ${item.value}
-                            <span>
-                                ${getArrow(item.monthTrend)}
-                                ${getArrow(item.yearTrend)}
-                            </span>
+                            ${dataType}: ${value}
                          </li>`;
         }
 

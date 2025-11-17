@@ -9,3 +9,11 @@ Tämä tiedosto sisältää tehtäviä, jotka on siirretty myöhemmäksi.
 - [ ] **Korjaa checkpoint-komennon toiminta:**
     - **Kuvaus:** `gemini checkpoint` -komento epäonnistui ja tuotti odottamattoman tulosteen. Tämän komennon toiminta on tutkittava ja korjattava.
     - **Status:** Siirretty myöhemmäksi teknisen ongelman vuoksi.
+
+- [ ] **Viimeistele front-end-toteutus:**
+    - **Kuvaus:**
+        1.  Vaihda `scripts.js`-tiedostoon oikea Firebase-projektin konfiguraatio.
+        2.  Toteuta trendilaskenta (kuukausi- ja vuositasolla) ja lisää nuolinäytöt käyttöliittymään.
+        3.  Laajenna käyttöliittymää näyttämään myös koulutus- ja ammattiryhmittäistä dataa.
+        4.  Hienosäädä käyttöliittymän ulkoasua ja käytettävyyttä.
+    - **Status:** Odottaa toteutusta.
