@@ -4,7 +4,7 @@ import os
 import json
 import base64
 
-from orchestrator.tools.statfin_tool import get_statfi_data, get_unemployment_by_education_data
+from orchestrator.tools.statfin_tool import get_statfi_data, get_unemployment_by_education_data, get_unemployment_by_occupation_data
 from orchestrator.tools.google_news_tool import get_google_news_data
 
 def initialize_firebase():
@@ -61,6 +61,7 @@ def main():
         get_statfi_data(db)
         # get_google_news_data(db) # Temporarily disabled to stop SerpAPI calls
         get_unemployment_by_education_data(db) # Fetch unemployment by education data
+        get_unemployment_by_occupation_data(db) # Fetch unemployment by occupation data
 
         # Generate and print the monthly report
         monthly_report = generate_monthly_report(db)

@@ -97,3 +97,11 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
 *   **Tehtävä:** Gemini API -kiintiövirhe.
     *   **Status:** **Siirretty myöhemmäksi.**
     *   **Kuvaus:** Gemini API palautti 429 "Too Many Requests" -virheen. Käyttäjän päätöksellä tämän ongelman ratkaisua siirretään myöhemmäksi, koska agenttien toiminnallisuus määritellään ja testataan myöhemmin. Arkkitehtuuri on nyt valmis agentteja varten.
+
+*   **Tehtävä:** Lisätty työttömien työnhakijoiden ja avoimien työpaikkojen haku ammattiryhmän mukaan.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:**
+        1.  Lisätty uusi funktio `get_unemployment_by_occupation_data` `orchestrator/tools/statfin_tool.py`-tiedostoon.
+        2.  Funktio hakee datan StatFin API:sta ja tallentaa sen `unemployment_by_occupation_summary`-kokoelmaan Firestoreen.
+        3.  Data tallennetaan jäsennellyssä muodossa, jossa on eroteltu työttömät ja avoimet työpaikat ammattiryhmittäin ja alueittain.
+        4.  Datan tallennus on optimoitu siten, että vain nollasta poikkeavat arvot tallennetaan, mikä säästää tilaa ja tekee datasta tehokkaamman LLM-agenttien käyttöön.
