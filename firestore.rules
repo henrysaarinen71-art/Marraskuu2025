@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /unemployment_general_summary/{document=**} {
+      allow read: if true;
+    }
+    match /monthly_reports/{document=**} {
+      allow read: if true;
+    }
+  }
+}

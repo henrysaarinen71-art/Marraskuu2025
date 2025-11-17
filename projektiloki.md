@@ -105,3 +105,10 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
         2.  Funktio hakee datan StatFin API:sta ja tallentaa sen `unemployment_by_occupation_summary`-kokoelmaan Firestoreen.
         3.  Data tallennetaan jäsennellyssä muodossa, jossa on eroteltu työttömät ja avoimet työpaikat ammattiryhmittäin ja alueittain.
         4.  Datan tallennus on optimoitu siten, että vain nollasta poikkeavat arvot tallennetaan, mikä säästää tilaa ja tekee datasta tehokkaamman LLM-agenttien käyttöön.
+
+*   **Tehtävä:** Korjattu front-endin datanäkymä.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:**
+        1.  Luotu `firestore.rules`-tiedosto, joka sallii lukuoikeudet `unemployment_general_summary`- ja `monthly_reports`-kokoelmiin.
+        2.  Päivitetty `firebase.json` käyttämään uutta sääntötiedostoa.
+        3.  Julkaistu uudet säännöt Firebaseen.
