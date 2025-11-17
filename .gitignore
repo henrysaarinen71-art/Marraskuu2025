@@ -10,3 +10,7 @@ venv/
 # Secrets
 firebase-credentials.json
 .env
+GEMINI_API_KEY.txt
+
+# Virtualenv
+.venv/

@@ -64,3 +64,36 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
         3.  Poistettu vanhentunut `get_statfi_data`-funktio käytöstä, joka loi sekavaa ja litteää dataa `unemployment_data`-kokoelmaan.
         4.  Poistettu vanha `unemployment_data`-kokoelma Firebasesta erillisellä siivousskriptillä.
     *   **TULOS:** Datan haku on nyt tehokkaampaa ja vain jäsenneltyä, koulutustason mukaista työttömyysdataa tallennetaan `unemployment_by_education_summary`-kokoelmaan. Tämä selkeyttää tietokannan rakennetta ja vastaa projektin tavoitteita.
+
+*   **Tehtävä:** Yleisten työttömyystietojen haun ja tallennuksen refaktorointi.
+*   **Status:** **Valmis.**
+*   **Kuvaus:**
+    *   **ONGELMA:** Käyttäjä halusi lisätä uusia tietotyyppejä yleisiin työttömyystilastoihin, joiden haku oli aiemmin poistettu käytöstä epäloogisen tallennusrakenteen vuoksi.
+    *   **KORJAUS:**
+        1.  `get_statfi_data`-funktio on kirjoitettu kokonaan uudelleen. Se tallentaa nyt yleiset työttömyystiedot jäsenneltyyn muotoon uuteen `unemployment_general_summary`-kokoelmaan, samalla logiikalla kuin koulutustason data.
+        2.  Lisätty uusi tietotyyppi "Vamm./pitkäaik.sair. työttömät työnhakijat (lkm.)" (`TYOTTOMATSAIR`) datanhakuun.
+        3.  `monthly_report_agent` on päivitetty lukemaan dataa uudesta `unemployment_general_summary`-kokoelmasta.
+    *   **TULOS:** Molemmat data-aineistot (yleinen ja koulutustason mukainen) haetaan ja tallennetaan nyt johdonmukaisesti ja jäsennellysti omiin kokoelmiinsa.
+
+*   **Tehtävä:** Projektin valmistelu tulevaa agentti-arkkitehtuuria varten ja tietoturvan varmistus.
+*   **Status:** **Valmis.**
+*   **Kuvaus:**
+    *   **Tietoturva:** Varmistettu, että `firebase-credentials.json` on `.gitignore`-tiedostossa ja että API-avaimet ladataan ympäristömuuttujista.
+    *   **Agentin luonti:** Luotu paikkamerkki `orchestrator/agents/statfin_agent.py` tulevaa Tilastokeskus-datan käsittelyä varten.
+    *   **Ympäristöongelmat:** Taisteltu merkittävien Python-ympäristöön liittyvien ongelmien kanssa, jotka estivät sovelluksen luotettavan suorittamisen. Ongelma `firebase-admin`-kirjastossa on väliaikaisesti kierretty poistamalla vanhan datan poistofunktio käytöstä, mutta perimmäinen syy on todennäköisesti paikallisessa ympäristössä.
+
+*   **Tehtävä:** Korjattu `SyntaxError` `orchestrator/tools/statfin_tool.py`-tiedostossa.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:** Korjattu duplikaatti `else`-lauseke ja virheellinen sisennys `get_statfi_data`-funktiossa.
+
+*   **Tehtävä:** Korjattu StatFin API 400 -virhe datanhaussa.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:** Säädetty `fetch_end_month`-logiikkaa `get_statfi_data`- ja `get_unemployment_by_education_data`-funktioissa ottamaan huomioon datan saatavuusviiveet käyttämällä `DATA_FETCH_DELAY_MONTHS`-vakiota. Tämä estää pyyntöjä liian tuoreelle tai vielä julkaisemattomalle datalle.
+
+*   **Tehtävä:** Korjattu Gemini API -mallin nimen virhe.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:** Vaihdettu Gemini-mallin nimi `gemini-pro`:sta `gemini-2.5-pro-preview-03-25`:een `monthly_report_agent.py`-tiedostossa, jotta käytetään saatavilla olevaa mallia.
+
+*   **Tehtävä:** Gemini API -kiintiövirhe.
+    *   **Status:** **Siirretty myöhemmäksi.**
+    *   **Kuvaus:** Gemini API palautti 429 "Too Many Requests" -virheen. Käyttäjän päätöksellä tämän ongelman ratkaisua siirretään myöhemmäksi, koska agenttien toiminnallisuus määritellään ja testataan myöhemmin. Arkkitehtuuri on nyt valmis agentteja varten.

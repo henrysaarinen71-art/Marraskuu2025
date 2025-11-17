@@ -1,22 +1,25 @@
 import os
 import google.generativeai as genai
 from firebase_admin import firestore
-from orchestrator.tools.statfin_tool import get_latest_month_from_firestore, DATA_TYPE_MAPPING, REGION_MAPPING
+from orchestrator.tools.statfin_tool import get_latest_general_month_from_firestore, DATA_TYPE_MAPPING, REGION_MAPPING
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 def get_latest_monthly_data(db, year, month):
     """
-    Fetches all unemployment data for a specific month from Firestore.
+    Fetches the general unemployment data summary for a specific month from Firestore.
     """
     try:
         month_str = f"{year}M{month:02d}"
-        query = db.collection('unemployment_data').where('year_month', '==', month_str)
-        results = query.get()
-        return [doc.to_dict() for doc in results]
+        doc_ref = db.collection('unemployment_general_summary').document(month_str)
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict()
+        else:
+            return None
     except Exception as e:
         print(f"Error fetching latest monthly data: {e}")
-        return []
+        return None
 
 def save_report_to_firestore(db, report, year, month):
     """
@@ -40,7 +43,7 @@ def generate_monthly_report(db):
     """
     print("Generating monthly report...")
 
-    latest_year, latest_month = get_latest_month_from_firestore(db)
+    latest_year, latest_month = get_latest_general_month_from_firestore(db)
 
     if not latest_year or not latest_month:
         return "Could not generate monthly report because no data was found in Firestore."
@@ -50,23 +53,16 @@ def generate_monthly_report(db):
     if not monthly_data:
         return f"Could not generate monthly report because no data was found for {latest_year}-{latest_month}."
 
-    # Group data by region
-    data_by_region = {region: [] for region in REGION_MAPPING.values()}
-    for item in monthly_data:
-        region_name = item.get("region_name")
-        if region_name in data_by_region:
-            data_by_region[region_name].append(item)
-
     # Format the data for the Gemini prompt
     report_data = ""
-    for region, data in data_by_region.items():
-        report_data += f"## {region}\n\n"
-        for item in sorted(data, key=lambda x: x['data_type_name']):
-            report_data += f"- {item['data_type_name']}: {item['value']}\n"
+    regions = monthly_data.get("regions", {})
+    for region_name, data in sorted(regions.items()):
+        report_data += f"## {region_name}\n\n"
+        # Sort the data by the keys (data type names)
+        for data_type_name, value in sorted(data.items()):
+            report_data += f"- {data_type_name}: {value}\n"
         report_data += "\n"
 
-    # Placeholder for Gemini AI call
-    # In the future, we will send this data to Gemini to generate a natural language report.
     gemini_prompt = f"""
     Tehtäväsi on luoda kuukausikatsaus pääkaupunkiseudun työllisyystilanteesta.
     Käytä vain alla olevaa dataa. Älä käytä mitään ulkoisia lähteitä tai verkkohakua.
@@ -77,7 +73,7 @@ def generate_monthly_report(db):
     """
 
     try:
-        model = genai.GenerativeModel("gemini-pro")
+        model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25")
         response = model.generate_content(gemini_prompt)
         report_content = response.text
     except Exception as e:
