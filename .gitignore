@@ -14,3 +14,6 @@ GEMINI_API_KEY.txt
 
 # Virtualenv
 .venv/
+
+# Firebase
+.firebase/

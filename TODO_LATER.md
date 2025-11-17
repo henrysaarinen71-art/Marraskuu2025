@@ -12,8 +12,9 @@ Tämä tiedosto sisältää tehtäviä, jotka on siirretty myöhemmäksi.
 
 - [ ] **Viimeistele front-end-toteutus:**
     - **Kuvaus:**
-        1.  Vaihda `scripts.js`-tiedostoon oikea Firebase-projektin konfiguraatio.
+        1.  Vaihda `scripts.js`-tiedostoon oikea Firebase-projektin konfiguraatio. (Valmis)
         2.  Toteuta trendilaskenta (kuukausi- ja vuositasolla) ja lisää nuolinäytöt käyttöliittymään.
         3.  Laajenna käyttöliittymää näyttämään myös koulutus- ja ammattiryhmittäistä dataa.
         4.  Hienosäädä käyttöliittymän ulkoasua ja käytettävyyttä.
     - **Status:** Odottaa toteutusta.
+    - **Huom:** Front-end on nyt julkaistu Firebase Hostingiin osoitteessa: https://botti-23428.web.app
