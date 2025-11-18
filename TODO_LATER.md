@@ -18,3 +18,4 @@ Tämä tiedosto sisältää tehtäviä, jotka on siirretty myöhemmäksi.
         4.  Hienosäädä käyttöliittymän ulkoasua ja käytettävyyttä.
     - **Status:** Odottaa toteutusta.
     - **Huom:** Front-end on nyt julkaistu Firebase Hostingiin osoitteessa: https://botti-23428.web.app. Firebase-konfiguraatio on päivitetty.
+. Firebase-konfiguraatio on päivitetty.
