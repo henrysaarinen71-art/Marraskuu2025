@@ -392,14 +392,138 @@ def get_unemployment_by_education_data(db):
             for month in range(fetch_start_month, fetch_end_month + 1):
                 month_values = [f"{year}M{month:02d}"]
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Fetching education data for {year}M{month:02d}...")
-                # ... (rest of the single month fetch logic is the same)
+                
+                query_payload = {
+                    "query": [
+                        {"code": "Alue", "selection": {"filter": "item", "values": list(REGION_MAPPING.keys())}},
+                        {"code": "Sukupuoli", "selection": {"filter": "item", "values": list(GENDER_MAPPING.keys())}},
+                        {"code": "Koulutusaste", "selection": {"filter": "item", "values": list(EDUCATION_LEVEL_MAPPING.keys())}},
+                        {"code": "Kuukausi", "selection": {"filter": "item", "values": month_values}}
+                    ],
+                    "response": {"format": "json-stat2"}
+                }
+
+                try:
+                    response = requests.post(statfi_api_url, json=query_payload)
+                    response.raise_for_status()
+                    data = response.json()
+
+                    if not data.get('value'):
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] API returned no new education data for {year}M{month:02d}.")
+                        continue
+
+                    dimensions = data['dimension']
+                    region_ids = dimensions['Alue']['category']['index']
+                    gender_ids = dimensions['Sukupuoli']['category']['index']
+                    education_ids = dimensions['Koulutusaste']['category']['index']
+                    month_ids = dimensions['Kuukausi']['category']['index']
+                    values = data['value']
+
+                    value_index = 0
+                    for month_id in month_ids:
+                        month_code = dimensions['Kuukausi']['category']['label'][month_id]
+                        monthly_summary = {
+                            "year_month": month_code,
+                            "timestamp": firestore.SERVER_TIMESTAMP,
+                            "regions": {}
+                        }
+
+                        for region_id in region_ids:
+                            region_code = dimensions['Alue']['category']['label'][region_id]
+                            region_name = REGION_MAPPING.get(region_code, region_code)
+                            monthly_summary["regions"][region_name] = {"genders": {}}
+
+                            for gender_id in gender_ids:
+                                gender_code = dimensions['Sukupuoli']['category']['label'][gender_id]
+                                gender_name = GENDER_MAPPING.get(gender_code, gender_code)
+                                monthly_summary["regions"][region_name]["genders"][gender_name] = {"education_levels": {}}
+
+                                for education_id in education_ids:
+                                    education_code = dimensions['Koulutusaste']['category']['label'][education_id]
+                                    education_name = EDUCATION_LEVEL_MAPPING.get(education_code, education_code)
+                                    
+                                    value = values[value_index]
+                                    value_index += 1
+                                    monthly_summary["regions"][region_name]["genders"][gender_name]["education_levels"][education_name] = value
+                            
+                            save_education_summary_to_firestore(db, month_code, monthly_summary)
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Education data for {year}M{month:02d} fetched and saved.")
+
+                except requests.exceptions.HTTPError as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Error fetching education data from StatFin API for {year}M{month:02d}: {e}")
+                except KeyError as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Error parsing StatFin API response for education data for {year}M{month:02d} (missing key): {e}")
+                except Exception as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] An unexpected error occurred for education data for {year}M{month:02d}: {e}")
         else:
             month_values = generate_month_codes(year, fetch_start_month, year, fetch_end_month)
             if not month_values:
                 continue
 
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Fetching education data for year {year} ({len(month_values)} months)...")
-            # ... (rest of the yearly fetch logic is the same)
+
+            query_payload = {
+                "query": [
+                    {"code": "Alue", "selection": {"filter": "item", "values": list(REGION_MAPPING.keys())}},
+                    {"code": "Sukupuoli", "selection": {"filter": "item", "values": list(GENDER_MAPPING.keys())}},
+                    {"code": "Koulutusaste", "selection": {"filter": "item", "values": list(EDUCATION_LEVEL_MAPPING.keys())}},
+                    {"code": "Kuukausi", "selection": {"filter": "item", "values": month_values}}
+                ],
+                "response": {"format": "json-stat2"}
+            }
+
+            try:
+                response = requests.post(statfi_api_url, json=query_payload)
+                response.raise_for_status()
+                data = response.json()
+
+                if not data.get('value'):
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] API returned no new education data for year {year}.")
+                    continue
+
+                dimensions = data['dimension']
+                region_ids = dimensions['Alue']['category']['index']
+                gender_ids = dimensions['Sukupuoli']['category']['index']
+                education_ids = dimensions['Koulutusaste']['category']['index']
+                month_ids = dimensions['Kuukausi']['category']['index']
+                values = data['value']
+
+                value_index = 0
+                for month_id in month_ids:
+                    month_code = dimensions['Kuukausi']['category']['label'][month_id]
+                    monthly_summary = {
+                        "year_month": month_code,
+                        "timestamp": firestore.SERVER_TIMESTAMP,
+                        "regions": {}
+                    }
+
+                    for region_id in region_ids:
+                        region_code = dimensions['Alue']['category']['label'][region_id]
+                        region_name = REGION_MAPPING.get(region_code, region_code)
+                        monthly_summary["regions"][region_name] = {"genders": {}}
+
+                        for gender_id in gender_ids:
+                            gender_code = dimensions['Sukupuoli']['category']['label'][gender_id]
+                            gender_name = GENDER_MAPPING.get(gender_code, gender_code)
+                            monthly_summary["regions"][region_name]["genders"][gender_name] = {"education_levels": {}}
+
+                            for education_id in education_ids:
+                                education_code = dimensions['Koulutusaste']['category']['label'][education_id]
+                                education_name = EDUCATION_LEVEL_MAPPING.get(education_code, education_code)
+                                
+                                value = values[value_index]
+                                value_index += 1
+                                monthly_summary["regions"][region_name]["genders"][gender_name]["education_levels"][education_name] = value
+                        
+                        save_education_summary_to_firestore(db, month_code, monthly_summary)
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Education data for year {year} fetched and saved.")
+
+            except requests.exceptions.HTTPError as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Error fetching education data from StatFin API for year {year}: {e}")
+            except KeyError as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Error parsing StatFin API response for education data for year {year} (missing key): {e}")
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] An unexpected error occurred for education data for year {year}: {e}")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Unemployment by education level data update process completed.")
     # delete_oldest_education_summaries(db)
@@ -508,6 +632,68 @@ def get_statfi_data(db):
                 except Exception as e:
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] An unexpected error occurred for general data for {year}M{month:02d}: {e}")
 
+        # Handle the latest available year by fetching month by month
+        if year == latest_available_year:
+            for month in range(fetch_start_month, fetch_end_month + 1):
+                month_values = [f"{year}M{month:02d}"]
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Fetching general data for {year}M{month:02d}...")
+                
+                query_payload = {
+                    "query": [
+                        {"code": "Alue", "selection": {"filter": "item", "values": list(REGION_MAPPING.keys())}},
+                        {"code": "Kuukausi", "selection": {"filter": "item", "values": month_values}},
+                        {"code": "Tiedot", "selection": {"filter": "item", "values": list(DATA_TYPE_MAPPING.keys())}}
+                    ],
+                    "response": {"format": "json-stat2"}
+                }
+
+                try:
+                    response = requests.post(statfi_api_url, json=query_payload)
+                    response.raise_for_status()
+                    data = response.json()
+
+                    if not data.get('value'):
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] API returned no new general data for {year}M{month:02d}.")
+                        continue
+
+                    dimensions = data['dimension']
+                    region_ids = dimensions['Alue']['category']['index']
+                    month_ids = dimensions['Kuukausi']['category']['index']
+                    data_type_ids = dimensions['Tiedot']['category']['index']
+                    values = data['value']
+
+                    value_index = 0
+                    for month_id in month_ids:
+                        month_code = dimensions['Kuukausi']['category']['label'][month_id]
+                        monthly_summary = {
+                            "year_month": month_code,
+                            "timestamp": firestore.SERVER_TIMESTAMP,
+                            "regions": {}
+                        }
+
+                        for region_id in region_ids:
+                            region_code = dimensions['Alue']['category']['label'][region_id]
+                            region_name = REGION_MAPPING.get(region_code, region_code)
+                            monthly_summary["regions"][region_name] = {}
+
+                            for data_type_id in data_type_ids:
+                                data_type_code = dimensions['Tiedot']['category']['label'][data_type_id]
+                                data_type_name = DATA_TYPE_MAPPING.get(data_type_code, data_type_code)
+                                
+                                value = values[value_index]
+                                value_index += 1
+                                monthly_summary["regions"][region_name][data_type_name] = value
+                        
+                        save_general_summary_to_firestore(db, month_code, monthly_summary)
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] General unemployment data for {year}M{month:02d} fetched and saved.")
+
+                except requests.exceptions.HTTPError as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Error fetching general data from StatFin API for {year}M{month:02d}: {e}")
+                except KeyError as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Error parsing StatFin API response for general data for {year}M{month:02d} (missing key): {e}")
+                except Exception as e:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] An unexpected error occurred for general data for {year}M{month:02d}: {e}")
+        else:
             month_values = generate_month_codes(year, fetch_start_month, year, fetch_end_month)
             if not month_values:
                 continue

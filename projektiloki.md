@@ -113,3 +113,26 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
         2.  Päivitetty `firebase.json` käyttämään uutta sääntötiedostoa.
         3.  Julkaistu uudet säännöt Firebaseen.
         4.  Päivitetty `scripts.js` ja `index.html` käyttämään `import map`-määritystä moduulien lataamiseen, mikä korjasi datan näyttöongelman.
+## 18. marraskuuta 2025
+
+*   **Tehtävä:** Korjattu `SyntaxError` `orchestrator/tools/statfin_tool.py`-tiedostossa.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:** Korjattu duplikaatti `else`-lauseke ja virheellinen sisennys `get_statfi_data`-funktiossa. Lisäksi korjattu vastaava virhe `get_unemployment_by_education_data`-funktiossa, jossa puuttuva logiikka lisättiin sekä `if`- että `else`-lohkoihin.
+
+*   **Tehtävä:** Korjattu Gemini API -avaimen lataus.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:** `monthly_report_agent.py`-tiedostoa muutettiin lukemaan Gemini API-avain `GEMINI_API_KEY.txt`-tiedostosta ympäristömuuttujan sijaan.
+
+*   **Tehtävä:** Gemini API -kiintiövirhe.
+    *   **Status:** **Odottaa käyttäjän toimenpiteitä.**
+    *   **Kuvaus:** Gemini API palautti 429 "You exceeded your current quota, please check your plan and billing details" -virheen. Käyttäjän tulee tarkistaa Google Cloud -projektinsa laskutus- ja kiintiöasetukset. Agentti jatkaa, kun käyttäjä on vahvistanut ongelman ratkaistuksi.
+
+*   **Tehtävä:** Projektin rakenteen ja dokumentaation parantaminen.
+    *   **Status:** **Valmis.**
+    *   **Kuvaus:**
+        1.  Projekti on järjestetty uudelleen `backend`- ja `frontend`-kansioihin.
+        2.  Luotu `SETUP.md`, joka sisältää asennus- ja ajo-ohjeet.
+        3.  Luotu `ARCHITECTURE.md`, joka kuvaa projektin arkkitehtuurin ja datavirran.
+        4.  Luotu `docs/GITHUB_ACTIONS.md`, joka dokumentoi GitHub Actions -työnkulun ja salaisuuksien hallinnan.
+        5.  `.firebaserc` on lisätty `.gitignore`-tiedostoon.
+        6.  Päivitetty GitHub Actions -työnkulku (`monthly_update.yml`) vastaamaan uutta projektirakennetta.

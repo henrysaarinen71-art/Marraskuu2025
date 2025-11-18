@@ -3,7 +3,20 @@ import google.generativeai as genai
 from firebase_admin import firestore
 from orchestrator.tools.statfin_tool import get_latest_general_month_from_firestore, DATA_TYPE_MAPPING, REGION_MAPPING
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+# Construct the absolute path to GEMINI_API_KEY.txt
+gemini_api_key_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'GEMINI_API_KEY.txt')
+
+# Read the API key from the file
+try:
+    with open(gemini_api_key_path, 'r') as f:
+        gemini_api_key = f.read().strip()
+    genai.configure(api_key=gemini_api_key)
+except FileNotFoundError:
+    print(f"Error: GEMINI_API_KEY.txt not found at {gemini_api_key_path}")
+    genai.configure(api_key=None) # Configure with None to allow error to propagate
+except Exception as e:
+    print(f"Error reading GEMINI_API_KEY.txt: {e}")
+    genai.configure(api_key=None) # Configure with None to allow error to propagate
 
 def get_latest_monthly_data(db, year, month):
     """
