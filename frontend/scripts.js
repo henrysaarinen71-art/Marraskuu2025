@@ -1,6 +1,24 @@
-// Firebase app and db are now initialized in index.html and made globally available
-// const app = window.app;
-// const db = window.db;
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics"; // Assuming analytics is also used
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDhgPGk19rv6oC74t2aC_O8dBzY6s1UlB8",
+  authDomain: "botti-23428.firebaseapp.com",
+  projectId: "botti-23428",
+  storageBucket: "botti-23428.firebasestorage.app",
+  messagingSenderId: "699014963228",
+  appId: "1:699014963228:web:cde6a34bfbf066f7f03fd9",
+  measurementId: "G-ERB9TBZMZG"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const analytics = getAnalytics(app); // Initialize analytics if needed
 
 const regions = ["Helsinki", "Espoo", "Vantaa", "Kauniainen"];
 const dataTypes = {

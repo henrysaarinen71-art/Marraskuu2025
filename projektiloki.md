@@ -112,4 +112,4 @@ Tämä tiedosto dokumentoi Marraskuu2025-projektin suunnittelun ja toteutuksen.
         1.  Luotu `firestore.rules`-tiedosto, joka sallii lukuoikeudet `unemployment_general_summary`- ja `monthly_reports`-kokoelmiin.
         2.  Päivitetty `firebase.json` käyttämään uutta sääntötiedostoa.
         3.  Julkaistu uudet säännöt Firebaseen.
-        4.  Päivitetty `scripts.js` ja `index.html` käyttämään modulaarista Firebase SDK:ta oikein (korjattu moduulien latausvirhe), mikä korjasi datan näyttöongelman.
+        4.  Päivitetty `scripts.js` ja `index.html` käyttämään `import map`-määritystä moduulien lataamiseen, mikä korjasi datan näyttöongelman.

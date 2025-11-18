@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Työllisyystilanne</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js",
+                "firebase/firestore": "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js",
+                "firebase/analytics": "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="main-container">
@@ -41,33 +50,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs for modular API from CDN -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-        // You might also need to import getAnalytics if you use it
-        // import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js';
-
-        // Your web app's Firebase configuration (from scripts.js)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDhgPGk19rv6oC74t2aC_O8dBzY6s1UlB8",
-            authDomain: "botti-23428.firebaseapp.com",
-            projectId: "botti-23428",
-            storageBucket: "botti-23428.firebasestorage.app",
-            messagingSenderId: "699014963228",
-            appId: "1:699014963228:web:cde6a34bfbf066f7f03fd9",
-            measurementId: "G-ERB9TBZMZG"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        // const analytics = getAnalytics(app); // Initialize analytics if needed
-
-        // Make app and db globally available for scripts.js
-        window.app = app;
-        window.db = db;
-    </script>
     <script type="module" src="scripts.js"></script>
 </body>
 </html>
