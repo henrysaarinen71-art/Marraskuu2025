@@ -1,13 +1,12 @@
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// IMPORTANT: Replace with your actual Firebase project configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDhgPGk19rv6oC74t2aC_O8dBzY6s1UlB8",
-  authDomain: "botti-23428.firebaseapp.com",
-  projectId: "botti-23428",
-  storageBucket: "botti-23428.firebasestorage.app",
-  messagingSenderId: "699014963228",
-  appId: "1:699014963228:web:cde6a34bfbf066f7f03fd9",
-  measurementId: "G-ERB9TBZMZG"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 // Initialize Firebase
