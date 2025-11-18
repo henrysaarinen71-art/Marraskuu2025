@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Työllisyystilanne</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Työllisyystilanne Pääkaupunkiseudulla</h1>
-        <div class="text-center mb-4">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reportModal">
-                Kuukausikatsaus
-            </button>
+    <div class="main-container">
+        <div class="sidebar">
+            <h3>Valikko</h3>
+            <ul>
+                <li><a href="#" class="active">Työvoimatilasto</a></li>
+                <li><a href="#">Avoimet työpaikat</a></li>
+                <li><a href="#">Koulutusaste</a></li>
+            </ul>
+            <hr>
+            <h3>Tietolähde</h3>
+            <ul>
+                <li><a href="#">Tilastokeskus</a></li>
+            </ul>
+            <hr>
+            <h3>Valitse alue</h3>
+            <ul>
+                <li><a href="#">Helsinki</a></li>
+                <li><a href="#">Espoo</a></li>
+                <li><a href="#">Vantaa</a></li>
+                <li><a href="#">Kauniainen</a></li>
+            </ul>
         </div>
-        <div id="data-container" class="row">
-            <!-- Data will be loaded here -->
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="reportModalLabel">Kuukausikatsaus</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="report-content">
-                    <!-- Report content will be loaded here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+        <div class="main-content">
+            <div class="top-nav">
+                <button class="btn active">Työttömyysaste</button>
+                <button class="btn">Työllisyysaste</button>
+                <button class="btn">Avoimet työpaikat</button>
+            </div>
+            <div id="data-container">
+                <!-- Data will be loaded here -->
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
     <script src="scripts.js"></script>

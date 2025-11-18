@@ -26,7 +26,7 @@ def initialize_firebase():
         else:
             # Fallback to local file (for local development)
             print("Initializing Firebase using local 'firebase-credentials.json' file.")
-            cred_path = os.path.join(os.path.dirname(__file__), 'firebase-credentials.json')
+            cred_path = os.path.join(os.path.dirname(__file__), 'botti-23428-firebase-adminsdk-fbsvc-d404b9f76d.json')
             if not os.path.exists(cred_path):
                 print(f"Error: The Firebase credentials file was not found at '{cred_path}'.")
                 print("For local development, ensure the file exists.")

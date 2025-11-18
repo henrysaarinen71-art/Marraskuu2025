@@ -17,4 +17,4 @@ Tämä tiedosto sisältää tehtäviä, jotka on siirretty myöhemmäksi.
         3.  Laajenna käyttöliittymää näyttämään myös koulutus- ja ammattiryhmittäistä dataa.
         4.  Hienosäädä käyttöliittymän ulkoasua ja käytettävyyttä.
     - **Status:** Odottaa toteutusta.
-    - **Huom:** Front-end on nyt julkaistu Firebase Hostingiin osoitteessa: https://botti-23428.web.app
+    - **Huom:** Front-end on nyt julkaistu Firebase Hostingiin osoitteessa: https://botti-23428.web.app. Firebase-konfiguraatio on päivitetty.
